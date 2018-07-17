@@ -12,7 +12,7 @@ resource "aws_autoscaling_notification" "a_record_notifications" {
 }
 
 resource "aws_sns_topic" "controllers_a_record" {
-  display_name = "${var.aws_autoscaling_group_name} Autoscaling Events: A Record"
+  display_name = "ASG ${var.aws_autoscaling_group_name} Events: A Record"
 }
 
 resource "aws_sns_topic_subscription" "controllers_a_record" {
@@ -22,7 +22,7 @@ resource "aws_sns_topic_subscription" "controllers_a_record" {
 }
 
 resource "aws_iam_role" "controllers_a_record" {
-  name_prefix = "${var.aws_autoscaling_group_name}_a_record_"
+  name_prefix = "${var.aws_autoscaling_group_name}_a_"
 
   assume_role_policy = <<EOF
 {
@@ -41,7 +41,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "controllers_a_record_logging" {
-  name_prefix = "${var.aws_autoscaling_group_name}_a_record_lambda_logging_"
+  name_prefix = "${var.aws_autoscaling_group_name}_a_logging"
   role        = "${aws_iam_role.controllers_a_record.id}"
 
   policy = <<EOF
@@ -77,7 +77,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "controllers_a_record" {
-  name_prefix = "${var.aws_autoscaling_group_name}_a_record_lambda_"
+  name_prefix = "${var.aws_autoscaling_group_name}_A_"
   role        = "${aws_iam_role.controllers_a_record.id}"
 
   //TODO: Restrict this to a single hosted zone
@@ -111,7 +111,7 @@ resource "aws_lambda_function" "controllers_a_record" {
   s3_bucket = "ma.ssive.co"
   s3_key    = "lambdas/massive_autoscaling_a_record.zip"
 
-  function_name = "asg_${var.aws_autoscaling_group_name}_a_records"
+  function_name = "asg_${var.aws_autoscaling_group_name}_a"
   role          = "${aws_iam_role.controllers_a_record.arn}"
   handler       = "aws-autoscalinggroup-a-record"
   runtime       = "go1.x"
