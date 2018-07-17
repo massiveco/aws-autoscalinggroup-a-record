@@ -86,6 +86,7 @@ func (r Reactor) processEvent(event autoscalingEvent) (*string, error) {
 		ChangeBatch: &route53.ChangeBatch{
 			Changes: []*route53.Change{&change},
 		},
+		HostedZoneId: aws.String(*zoneID),
 	})
 	if err != nil {
 		return nil, err
